@@ -369,6 +369,45 @@ namespace Internal.TypeSystem
             return result;
         }
 
+        public static DefType GetCallConvType(this MethodSignature signature)
+        {
+            EmbeddedSignatureData[] embeddedSignatureDatas = signature.GetEmbeddedSignatureData();
+
+            if (embeddedSignatureDatas == null)
+                return null;
+
+            DefType callConvType = null;
+            foreach (EmbeddedSignatureData data in embeddedSignatureDatas)
+            {
+                if (data.kind != EmbeddedSignatureDataKind.OptionalCustomModifier)
+                    continue;
+
+                // We only care about the modifiers for the return type. These will be at the start of
+                // the signature, so will be first in the array of embedded signature data.
+                if (data.index != MethodSignature.IndexOfCustomModifiersOnReturnType)
+                    break;
+
+                if (data.type is not DefType defType)
+                    continue;
+
+                if (defType.Namespace != "System.Runtime.CompilerServices")
+                    continue;
+
+                if (!defType.Name.StartsWith("CallConv"))
+                    continue;
+
+                if (callConvType != null)
+                {
+                    // Error if there are multiple recognized calling conventions
+                    ThrowHelper.ThrowBadImageFormatException();
+
+                    callConvType = defType;
+                }
+            }
+
+            return callConvType;
+        }
+
         public static bool ContainsSignatureVariables(this TypeDesc thisType)
         {
             switch (thisType.Category)

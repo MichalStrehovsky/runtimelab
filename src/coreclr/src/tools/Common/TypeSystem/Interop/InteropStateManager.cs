@@ -188,6 +188,27 @@ namespace Internal.TypeSystem
 
         public MethodDesc GetPInvokeCalliStub(MethodSignature signature)
         {
+            // If there's any modopts, strip them - except for the calling convention bit.
+            if (signature.HasEmbeddedSignatureData)
+            {
+                // If the calling convention is the only bit of metadata, use signature
+                // as-is, otherwise make a new one with just the calling convention.
+                DefType callConvType = signature.GetCallConvType();
+                if (callConvType == null || signature.GetEmbeddedSignatureData().Length != 1)
+                {
+                    EmbeddedSignatureData[] datas = callConvType == null
+                        ? null
+                        : new EmbeddedSignatureData[] {
+                            new EmbeddedSignatureData {
+                                index = MethodSignature.IndexOfCustomModifiersOnReturnType,
+                                kind = EmbeddedSignatureDataKind.OptionalCustomModifier,
+                                type = callConvType
+                            }  };
+                    signature = new MethodSignature(signature.Flags, signature.GenericParameterCount,
+                        signature.ReturnType, signature._parameters, datas);
+                }
+            }
+
             return _pInvokeCalliHashtable.GetOrCreateValue(signature);
         }
 

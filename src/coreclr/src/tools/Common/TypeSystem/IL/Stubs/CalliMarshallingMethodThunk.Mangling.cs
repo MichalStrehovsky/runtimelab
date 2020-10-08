@@ -20,7 +20,13 @@ namespace Internal.IL.Stubs
         {
             get
             {
-                return "Calli";
+                string callconv = "CallConvDefault";
+
+                DefType callconvType = _targetSignature.GetCallConvType();
+                if (callconvType != null)
+                    callconv = callconvType.Name;
+
+                return $"Calli_{callconv}";
             }
         }
     }
