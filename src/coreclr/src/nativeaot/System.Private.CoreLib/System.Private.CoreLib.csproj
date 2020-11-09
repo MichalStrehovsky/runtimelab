@@ -254,6 +254,7 @@
     <Compile Include="src\System\ValueType.cs" />
     <Compile Include="src\System\Runtime\RuntimeExportAttribute.cs" />
     <Compile Include="src\System\Runtime\RuntimeImportAttribute.cs" />
+    <Compile Include="src\System\Runtime\CompilerServices\CallConvRawManaged.cs" />
     <Compile Include="src\System\Runtime\CompilerServices\ClassConstructorRunner.cs" />
     <Compile Include="src\System\Runtime\CompilerServices\RuntimeHelpers.CoreRT.cs" />
     <Compile Include="src\System\WeakReference.CoreRT.cs" />

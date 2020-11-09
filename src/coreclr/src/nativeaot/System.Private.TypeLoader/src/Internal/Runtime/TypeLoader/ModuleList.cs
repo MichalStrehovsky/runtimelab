@@ -61,7 +61,10 @@ namespace Internal.Runtime.TypeLoader
             if ((moduleType == ModuleType.ReadyToRun) || (moduleType == ModuleType.Ecma))
             {
                 // Dynamic type load modules utilize dynamic type resolution
-                dynamicModulePtr->DynamicTypeSlotDispatchResolve = &ResolveTypeSlotDispatch;
+                dynamicModulePtr->DynamicTypeSlotDispatchResolve =
+                    // No fat calli transform needed for this
+                    (delegate* unmanaged [RawManaged] <IntPtr, IntPtr, ushort, IntPtr>)
+                    (delegate*<IntPtr, IntPtr, ushort, IntPtr>)&ResolveTypeSlotDispatch;
             }
             else
             {

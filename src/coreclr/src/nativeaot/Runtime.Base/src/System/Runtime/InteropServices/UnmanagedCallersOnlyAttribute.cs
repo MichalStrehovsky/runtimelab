@@ -55,4 +55,8 @@ namespace System.Runtime.CompilerServices
     {
         public CallConvThiscall() { }
     }
+    public class CallConvRawManaged
+    {
+        public CallConvRawManaged() { }
+    }
 }

@@ -1567,7 +1567,7 @@ namespace Internal.Runtime
 
         // Pointer to interface dispatch resolver that works off of a type/slot pair
         // This is a function pointer with the following signature IntPtr()(IntPtr targetType, IntPtr interfaceType, ushort slot)
-        private delegate*<IntPtr, IntPtr, ushort, IntPtr> _dynamicTypeSlotDispatchResolve;
+        private delegate* unmanaged [RawManaged] <IntPtr, IntPtr, ushort, IntPtr> _dynamicTypeSlotDispatchResolve;
 
         // Starting address for the the binary module corresponding to this dynamic module.
         private delegate*<ExceptionIDs, Exception> _getRuntimeException;
@@ -1586,7 +1586,7 @@ namespace Internal.Runtime
         }
 #endif
 
-        public delegate*<IntPtr, IntPtr, ushort, IntPtr> DynamicTypeSlotDispatchResolve
+        public delegate* unmanaged [RawManaged] <IntPtr, IntPtr, ushort, IntPtr> DynamicTypeSlotDispatchResolve
         {
             get
             {

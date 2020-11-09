@@ -153,6 +153,9 @@
     <Compile Include="..\..\Runtime.Base\src\System\Runtime\CompilerServices\IsVolatile.cs">
       <Link>System\Runtime\CompilerServices\IsVolatile.cs</Link>
     </Compile>
+    <Compile Include="..\..\Runtime.Base\src\System\Runtime\CompilerServices\RuntimeFeature.cs">
+      <Link>System\Runtime\CompilerServices\RuntimeFeature.cs</Link>
+    </Compile>
     <Compile Include="..\..\Runtime.Base\src\System\Runtime\CompilerServices\MethodImplAttribute.cs">
       <Link>System\Runtime\CompilerServices\MethodImplAttribute.cs</Link>
     </Compile>
