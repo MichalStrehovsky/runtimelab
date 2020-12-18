@@ -980,7 +980,11 @@ namespace ILCompiler.Dataflow
                                     }
                                     else
                                     {
+#if !ANALYZER
                                         reflectionContext.RecordRecognizedPattern(() => _dependencies.Add(_factory.MaximallyConstructableType(foundType), "Type.GetType reference"));
+#else
+                                        reflectionContext.RecordHandledPattern();
+#endif
                                         methodReturnValue = MergePointValue.MergeValues(methodReturnValue, new SystemTypeValue(foundType));
                                     }
                                 }
@@ -1481,11 +1485,13 @@ namespace ILCompiler.Dataflow
                             {
                                 if (typeHandleValue is RuntimeTypeHandleValue runtimeTypeHandleValue)
                                 {
+#if !ANALYZER
                                     TypeDesc typeRepresented = runtimeTypeHandleValue.TypeRepresented;
                                     if (!typeRepresented.IsGenericDefinition && !typeRepresented.ContainsSignatureVariables(treatGenericParameterLikeSignatureVariable: true) && typeRepresented.HasStaticConstructor)
                                     {
                                         _dependencies.Add(_factory.CanonicalEntrypoint(typeRepresented.GetStaticConstructor()), "RunClassConstructor reference");
                                     }
+#endif
 
                                     reflectionContext.RecordHandledPattern();
                                 }
@@ -1977,12 +1983,15 @@ namespace ILCompiler.Dataflow
 
         void MarkType(ref ReflectionPatternContext reflectionContext, TypeDesc type)
         {
+#if !ANALYZER
             _dependencies.Add(_factory.MaximallyConstructableType(type), reflectionContext.MemberWithRequirements.ToString());
+#endif
             reflectionContext.RecordHandledPattern();
         }
 
         void MarkMethod(ref ReflectionPatternContext reflectionContext, MethodDesc method)
         {
+#if !ANALYZER
             if (method.HasInstantiation || method.OwningType.IsGenericDefinition || method.OwningType.ContainsSignatureVariables(treatGenericParameterLikeSignatureVariable: true))
             {
                 if (_logger.IsVerbose)
@@ -2026,6 +2035,7 @@ namespace ILCompiler.Dataflow
                         _dependencies.Add(_factory.MethodGenericDictionary(method), reason);
                 }
             }
+#endif
 
             reflectionContext.RecordHandledPattern();
         }

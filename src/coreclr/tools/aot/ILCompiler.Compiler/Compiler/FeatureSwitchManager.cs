@@ -701,7 +701,9 @@ namespace ILCompiler
 
                 if (_value == Throw)
                 {
+#if !ANALYZER
                     codestream.EmitCallThrowHelper(emit, method.Context.GetHelperEntryPoint("ThrowHelpers", "ThrowBodyRemoved"));
+#endif
                 }
                 else if (_value == null)
                 {

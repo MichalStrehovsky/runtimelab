@@ -18,6 +18,7 @@ namespace ILCompiler.DependencyAnalysis
     /// </summary>
     internal static class ReflectionMethodBodyScanner
     {
+#if !ANALYZER
         [Flags]
         internal enum ScanModes
         {
@@ -239,6 +240,7 @@ namespace ILCompiler.DependencyAnalysis
         {
             return type != null && !type.IsGenericDefinition && !type.IsCanonicalSubtype(CanonicalFormKind.Any) && type.IsDefType;
         }
+#endif
 
         public static bool ResolveType(string name, ModuleDesc callingModule, TypeSystemContext context, out TypeDesc type, out ModuleDesc referenceModule)
         {
@@ -309,6 +311,7 @@ namespace ILCompiler.DependencyAnalysis
             return type != null;
         }
 
+#if !ANALYZER
         private static void RootVirtualMethodForReflection(ref DependencyList list, NodeFactory factory, MethodDesc method, string reason)
         {
             if (method.HasInstantiation)
@@ -440,6 +443,6 @@ namespace ILCompiler.DependencyAnalysis
                 return result;
             }
         }
-
+#endif
     }
 }
