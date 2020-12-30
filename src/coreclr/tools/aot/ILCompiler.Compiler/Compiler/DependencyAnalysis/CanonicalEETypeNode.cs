@@ -100,12 +100,27 @@ namespace ILCompiler.DependencyAnalysis
             GCDescEncoder.EncodeGCDesc(ref builder, _type);
         }
 
-        protected override void OutputInterfaceMap(NodeFactory factory, ref ObjectDataBuilder objData)
+        protected override IEETypeNode GetInterfaceTypeNode(NodeFactory factory, TypeDesc interfaceType)
         {
+            // The interface type will be visible to reflection and should be considered constructed.
+            return factory.ConstructedTypeSymbol(interfaceType.NormalizeInstantiation());
+        }
+
+        protected override void OutputInterfaceMap(NodeFactory factory, ref ObjectDataBuilder objData, bool relocsOnly)
+        {
+            if (relocsOnly)
+            {
+                return;
+            }
+
             foreach (var itf in _type.RuntimeInterfaces)
             {
-                // Interface omitted for canonical instantiations (constructed at runtime for dynamic types from the native layout info)
-                objData.EmitZeroPointer();
+                IEETypeNode interfaceTypeNode = GetInterfaceTypeNode(factory, itf);
+                if (interfaceTypeNode.Marked)
+                {
+                    // Interface omitted for canonical instantiations (constructed at runtime for dynamic types from the native layout info)
+                    objData.EmitZeroPointer();
+                }
             }
         }
 

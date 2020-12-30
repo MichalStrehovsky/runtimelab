@@ -124,11 +124,16 @@ namespace ILCompiler.DependencyAnalysis
             // Catch any runtime interface collapsing. We shouldn't have any
             Debug.Assert(declType.RuntimeInterfaces.Length == declType.GetTypeDefinition().RuntimeInterfaces.Length);
 
+            int entryIndex = 0;
+
             for (int interfaceIndex = 0; interfaceIndex < declType.RuntimeInterfaces.Length; interfaceIndex++)
             {
-                var interfaceType = declType.RuntimeInterfaces[interfaceIndex];
+                var interfaceType = declType.RuntimeInterfaces[interfaceIndex].NormalizeInstantiation();
                 var interfaceDefinitionType = declType.GetTypeDefinition().RuntimeInterfaces[interfaceIndex];
                 Debug.Assert(interfaceType.IsInterface);
+
+                if (!factory.ConstructedTypeSymbol(interfaceType).Marked)
+                    continue;
 
                 IReadOnlyList<MethodDesc> virtualSlots = factory.VTable(interfaceType).Slots;
                 
@@ -152,12 +157,14 @@ namespace ILCompiler.DependencyAnalysis
                         if (!implType.IsTypeDefinition)
                             targetMethod = factory.TypeSystemContext.GetMethodForInstantiatedType(implMethod.GetTypicalMethodDefinition(), (InstantiatedType)implType);
 
-                        builder.EmitShort(checked((short)interfaceIndex));
+                        builder.EmitShort(checked((short)entryIndex));
                         builder.EmitShort(checked((short)(interfaceMethodSlot + (interfaceType.HasGenericDictionarySlot() ? 1 : 0))));
                         builder.EmitShort(checked((short)VirtualMethodSlotHelper.GetVirtualMethodSlot(factory, targetMethod, declType)));
                         entryCount++;
                     }
                 }
+
+                entryIndex++;
             }
 
             builder.EmitInt(entryCountReservation, entryCount);
