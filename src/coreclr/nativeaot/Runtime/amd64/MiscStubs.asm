@@ -273,4 +273,29 @@ ProbeLoop:
 
 LEAF_END RhpStackProbe, _TEXT
 
+LEAF_ENTRY RhGetThreadStaticStorageForModule, _TEXT
+        ; Clear the upper bits of rcx so we can use it for addressing later
+        mov     ecx, ecx
+
+        ;; R10 = GetThread(), TRASHES R11
+        INLINE_GETTHREAD r10, r11
+
+        cmp     ecx, dword ptr [r10 + OFFSETOF__Thread__m_numThreadLocalModuleStatics]
+        jae     NoThreadStaticStorage
+
+        mov     rax, qword ptr [r10 + OFFSETOF__Thread__m_pThreadLocalModuleStatics]
+        mov     rax, qword ptr [rax + rcx * 8]
+        test    rax, rax
+        je      NoThreadStaticStorage
+
+        mov     rax, qword ptr [rax]
+        ret
+
+NoThreadStaticStorage:
+        xor     eax, eax
+        ret
+
+LEAF_END RhGetThreadStaticStorageForModule, _TEXT
+
+
 end

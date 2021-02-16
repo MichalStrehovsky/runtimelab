@@ -1359,11 +1359,13 @@ Boolean Thread::SetThreadStaticStorageForModule(Object * pStorage, uint32_t modu
     return TRUE;
 }
 
+#if 0
 COOP_PINVOKE_HELPER(Object*, RhGetThreadStaticStorageForModule, (uint32_t moduleIndex))
 {
     Thread * pCurrentThread = ThreadStore::RawGetCurrentThread();
     return pCurrentThread->GetThreadStaticStorageForModule(moduleIndex);
 }
+#endif
 
 COOP_PINVOKE_HELPER(Boolean, RhSetThreadStaticStorageForModule, (Array * pStorage, uint32_t moduleIndex))
 {
