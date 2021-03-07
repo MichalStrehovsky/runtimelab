@@ -146,6 +146,7 @@ if defined RunNativeAot (
     <IntermediateOutputPath>%24(MSBuildProjectDirectory)\</IntermediateOutputPath>
     <Optimize>$(Optimize)</Optimize>
     <DebugSymbols>true</DebugSymbols>
+    <NETCoreSdkVersion>$(NETCoreSdkVersion)</NETCoreSdkVersion>
   </PropertyGroup>
 
   $(NativeAotProjectLines)
