@@ -13,6 +13,7 @@ using Internal.IL;
 using Internal.IL.Stubs;
 using Internal.TypeSystem;
 using Internal.JitInterface;
+using ILCompiler.IBC;
 
 namespace ILCompiler
 {
@@ -23,6 +24,7 @@ namespace ILCompiler
         private readonly ExternSymbolMappedField _hardwareIntrinsicFlags;
         private CountdownEvent _compilationCountdown;
         private readonly Dictionary<string, InstructionSet> _instructionSetMap;
+        private readonly Dictionary<MethodDesc, MethodProfileData> _profileData;
 
         public InstructionSetSupport InstructionSetSupport { get; }
 
@@ -51,6 +53,46 @@ namespace ILCompiler
 
                 _instructionSetMap.Add(instructionSetInfo.ManagedName, instructionSetInfo.InstructionSet);
             }
+
+            _profileData = new Dictionary<MethodDesc, MethodProfileData>();
+
+            HashSet<ModuleDesc> possibleReferenceModules = new HashSet<ModuleDesc>();
+            foreach (var inputModule in TypeSystemContext.InputFilePaths.Keys)
+            {
+                try
+                {
+                    possibleReferenceModules.Add(TypeSystemContext.GetModuleForSimpleName(inputModule));
+                }
+                catch (TypeSystemException)
+                {
+                }
+            }
+            foreach (var inputModule in TypeSystemContext.ReferenceFilePaths.Keys)
+            {
+                try
+                {
+                    possibleReferenceModules.Add(TypeSystemContext.GetModuleForSimpleName(inputModule));
+                }
+                catch (TypeSystemException)
+                {
+                }
+            }
+
+            var ibcParser = new IBCProfileParser(logger, possibleReferenceModules);
+
+            bool partialNgen = false;
+            foreach (var module in possibleReferenceModules)
+            {
+                ProfileData profileData = ibcParser.ParseIBCDataFromModule((Internal.TypeSystem.Ecma.EcmaModule)module);
+                ProfileData.MergeProfileData(ref partialNgen, _profileData, profileData);
+            }
+        }
+
+        public MethodProfileData GetProfileData(MethodDesc method)
+        {
+            if (_profileData.TryGetValue(method, out MethodProfileData result))
+                return result;
+            return null;
         }
 
         protected override void CompileInternal(string outputFile, ObjectDumper dumper)

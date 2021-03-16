@@ -30,6 +30,20 @@
     <Compile Include="Compiler\RyuJitCompilation.cs" />
     <Compile Include="Compiler\RyuJitCompilationBuilder.cs" />
     <Compile Include="JitInterface\CorInfoImpl.RyuJit.cs" />
+
+    <Compile Include="..\ILCompiler.ReadyToRun\Win32Resources\ResourceData.cs" Link="Win32Resources\ResourceData.cs" />
+    <Compile Include="..\ILCompiler.ReadyToRun\Win32Resources\ResourceData.Reader.cs" Link="Win32Resources\ResourceData.Reader.cs" />
+    <Compile Include="..\ILCompiler.ReadyToRun\Win32Resources\ResourceData.ResourcesDataModel.cs" Link="Win32Resources\ResourceData.ResourcesDataModel.cs" />
+    <Compile Include="..\ILCompiler.ReadyToRun\Win32Resources\ResourceData.UpdateResourceDataModel.cs" Link="Win32Resources\ResourceData.UpdateResourceDataModel.cs" />
+    <Compile Include="..\ILCompiler.ReadyToRun\Win32Resources\ResourceData.Win32Structs.cs" Link="Win32Resources\ResourceData.Win32Structs.cs" />
+    <Compile Include="..\ILCompiler.ReadyToRun\IBC\IBCProfileParser.cs" Link="IBC\IBCProfileParser.cs" />
+    <Compile Include="..\ILCompiler.ReadyToRun\IBC\IBCDataReader.cs" Link="IBC\IBCDataReader.cs" />
+    <Compile Include="..\ILCompiler.ReadyToRun\IBC\IBCDataModel.cs" Link="IBC\IBCDataModel.cs" />
+    <Compile Include="..\ILCompiler.ReadyToRun\IBC\IBCProfileData.cs" Link="IBC\IBCProfileData.cs" />
+    <Compile Include="..\ILCompiler.ReadyToRun\IBC\ReaderExtensions.cs" Link="IBC\ReaderExtensions.cs" />
+
+    <Compile Include="..\..\Common\Internal\Runtime\CorConstants.cs" Link="IBC\CorConstants.cs" />
+    <Compile Include="..\ILCompiler.ReadyToRun\Compiler\ProfileData.cs" Link="IBC\ProfileData.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3411,6 +3411,8 @@ namespace Internal.JitInterface
             flags.Set(CorJitFlag.CORJIT_FLAG_PREJIT);
             flags.Set(CorJitFlag.CORJIT_FLAG_USE_PINVOKE_HELPERS);
 
+            flags.Set(CorJitFlag.CORJIT_FLAG_BBOPT);
+
             TargetArchitecture targetArchitecture = _compilation.TypeSystemContext.Target.Architecture;
 
             switch (targetArchitecture)
